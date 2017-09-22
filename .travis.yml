@@ -36,6 +36,9 @@ matrix:
     - os: linux
       compiler: clang
       env: FUZZER=true
+    - os: linux
+      compiler: tcc
+      env: ANALYZE=false
     - os: osx
       compiler: clang
       # disable homebrew auto update which takes a lot of time
@@ -62,6 +65,7 @@ addons:
       - libsubunit-dev
       - libx11-dev
       - mingw-w64
+      - tcc
       - texlive-fonts-recommended
       - texlive-latex-extra
       - texlive-latex-recommended
