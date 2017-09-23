@@ -162,13 +162,16 @@ else
     make -j
     if [ $? -ne 0 ] ; then exit 1 ; fi
     cd .. && rm build -rf
-    echo -en 'travis_fold:end:script.build.shared_libs\\r'echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
-    mkdir -p build && cd build
-    cmake -DUA_ENABLE_MULTITHREADING=ON -DUA_BUILD_EXAMPLES=ON ..
-    make -j
-    if [ $? -ne 0 ] ; then exit 1 ; fi
-    cd .. && rm build -rf
-    echo -en 'travis_fold:end:script.build.multithread\\r'
+
+	if [ "$CC" != "tcc" ]; then
+		echo -en 'travis_fold:end:script.build.shared_libs\\r'echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
+		mkdir -p build && cd build
+		cmake -DUA_ENABLE_MULTITHREADING=ON -DUA_BUILD_EXAMPLES=ON ..
+		make -j
+		if [ $? -ne 0 ] ; then exit 1 ; fi
+		cd .. && rm build -rf
+		echo -en 'travis_fold:end:script.build.multithread\\r'
+	fi
 
     echo -e "\r\n== Compile without discovery version ==" && echo -en 'travis_fold:start:script.build.unit_test_valgrind\\r'
     mkdir -p build && cd build
@@ -184,14 +187,15 @@ else
     if [ $? -ne 0 ] ; then exit 1 ; fi
     cd .. && rm build -rf
 
-
-    echo -e "\r\n== Compile multithreaded version with discovery =="
-    mkdir -p build && cd build
-    cmake -DUA_ENABLE_MULTITHREADING=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_DISCOVERY_MULTICAST=ON -DUA_BUILD_EXAMPLES=ON ..
-    make -j
-    if [ $? -ne 0 ] ; then exit 1 ; fi
-    cd .. && rm build -rf
-    echo -en 'travis_fold:end:script.build.multithread\\r'
+	if [ "$CC" != "tcc" ]; then
+		echo -e "\r\n== Compile multithreaded version with discovery =="
+		mkdir -p build && cd build
+		cmake -DUA_ENABLE_MULTITHREADING=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_DISCOVERY_MULTICAST=ON -DUA_BUILD_EXAMPLES=ON ..
+		make -j
+		if [ $? -ne 0 ] ; then exit 1 ; fi
+		cd .. && rm build -rf
+		echo -en 'travis_fold:end:script.build.multithread\\r'
+    fi
 
     echo -e "\r\n== Debug build and unit tests (64 bit, python 2) ==" && echo -en 'travis_fold:start:script.build.unit_test_valgrind_python2\\r'
     mkdir -p build && cd build
